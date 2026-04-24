@@ -146,32 +146,155 @@ Por lo que se recomienda usar SSH para una experiencia más fluida y segura al i
 2. Completa los detalles del repositorio, como el nombre, la descripción y la visibilidad (público o privado). Puedes elegir si deseas inicializar el repositorio con un archivo README, un archivo .gitignore o una licencia.
 3. Haz clic en el botón "Create repository" para crear el repositorio.
 ### Conectar un repositorio local de Git con uno existente en GitHub
-```
-git remote add origin <URL del repositorio en GitHub>
-git branch -M main
-git push -u origin main 
-```
+   ```
+   git remote add origin <URL del repositorio en GitHub>
+   git branch -M main
+   git push -u origin main 
+   ```
 Nota: Asegúrate de reemplazar `<URL del repositorio en GitHub>` con la URL real de tu repositorio en GitHub. Este comando establece una conexión entre tu repositorio local y el repositorio remoto en GitHub, permitiéndote enviar tus cambios al repositorio remoto utilizando `git push`. Para esto también es necesario haber inicializado un repositorio local de Git con `git init` y haber realizado al menos un commit antes de ejecutar estos comandos.
 ### Clonar un repositorio de Git
 Para clonar un repositorio de Git desde GitHub, puedes usar el siguiente comando en tu terminal:  
 
-```
-git clone <URL del repositorio en GitHub>
-```
+   ```
+   git clone <URL del repositorio en GitHub>
+   ```
 Si por accidente clonaste el repositorio usando HTTPS y deseas cambiarlo a SSH, puedes usar el siguiente comando para actualizar la URL del repositorio remoto:
 
-```git remote set-url origin <URL del repositorio en SSH>
-``` 
+   ```
+   git remote set-url origin <URL del repositorio en SSH>
+   ``` 
 Este comando también es útil si deseas cambiar la URL del repositorio remoto por cualquier motivo, como cambiar de un repositorio privado a uno público o viceversa. Asegúrate de reemplazar `<URL del repositorio en SSH>` con la URL real del repositorio en formato SSH.
 
 Para verificar que la URL del repositorio remoto se ha actualizado correctamente, puedes usar el siguiente comando:
 
-```git remote -v
-```
+   ```
+   git remote -v
+   ```
 ### Cambios 
 * Subir mis cambios a GitHub: Para subir tus cambios locales a GitHub, puedes usar el siguiente comando:
-```git push origin <nombre de la rama>
-```
+
+   ```
+   git push origin <nombre de la rama>
+   ```
 * Bajar cambios de GitHub a tu repositorio local: Para bajar los cambios realizados en el repositorio remoto de GitHub a tu repositorio local, puedes usar el siguiente comando:
-```git pull origin <nombre de la rama>
+
+   ```
+   git pull origin <nombre de la rama>
+   ```
+
+## CLASE - 04
+### Remote, SSH multiple y checkout
+
+#### GIT REMOTE
+Permite gestionar conexiones con repositorios remotos, comunica a GIT local donde enviar o de donde traer la información.
+
+#### SSH MULTIPLE
+Permite configurar múltiples claves SSH para diferentes cuentas o servicios, lo que es útil si trabajas con varios repositorios en GitHub o en otros servicios de alojamiento de código. 
+#### Configurar multiples claves SSH para diferentes cuentas o servicios
+Para configurar SSH multiple, puedes seguir estos pasos:
+1. Genera una nueva clave SSH para cada cuenta o servicio que deseas usar. Puedes hacerlo ejecutando el siguiente comando en tu terminal:
+   ```
+   ssh-keygen -t ed25519 -C "tu correo electrónico" -f ~/.ssh/id_miname
+   ```
+    Asegúrate de guardar cada clave con un nombre diferente para evitar sobrescribir las claves existentes. 
+2. Agrega cada clave SSH a tu cuenta de GitHub o al servicio correspondiente. Copia el contenido de cada clave pública SSH (generalmente ubicada en `~/.ssh/id_ed25519.pub`) y agrégala a la sección "SSH and GPG keys" de tu configuración de perfil en GitHub o en el servicio que estés utilizando.
+3. Configura tu archivo `~/.ssh/config` para especificar qué clave SSH usar para cada host. Puedes agregar entradas como la siguiente para cada cuenta o servicio:
+   ```
+   # Cuenta personal en GitHub
+
+   Host github.com
+     HostName github.com
+     User git
+     IdentityFile ~/.ssh/id_ed25519_github
+
+   # Cuenta de trabajo en GitLab
+   Host gitlab.com
+     HostName gitlab.com
+     User git
+     IdentityFile ~/.ssh/id_ed25519_gitlab
+   ```
+    Asegúrate de reemplazar `id_ed25519_github` y `id_ed25519_gitlab` con los nombres reales de tus claves SSH. Con esta configuración, cuando te conectes a GitHub o GitLab, se utilizará la clave SSH correspondiente para autenticarte automáticamente sin necesidad de ingresar tus credenciales cada vez. 
+
+* Host especifica el nombre del host al que deseas conectarte (por ejemplo, github.com).
+* HostName especifica la dirección real del host (en este caso, github.com).  
+* User especifica el nombre de usuario que se utilizará para la autenticación (en este caso, git).
+* IdentityFile especifica la ruta a la clave SSH que se utilizará para autenticarte con ese host específico.
+4. Prueba la conexión SSH para cada host para asegurarte de que la configuración sea correcta. Puedes hacerlo ejecutando el siguiente comando para cada host:
+   ```
+   ssh -T git@github-mi-cuenta
+   ssh -T git@gitlab-mi-cuenta
+   ```
+    Reemplaza `github-mi-cuenta` y `gitlab-mi-cuenta` con los nombres de los hosts que hayas configurado en tu archivo `~/.ssh/config`. Si la conexión es exitosa, deberías ver un mensaje de bienvenida de GitHub o del servicio correspondiente indicando que has autenticado correctamente con tu clave SSH. Ahora puedes usar Git para interactuar con tus repositorios en cada servicio sin necesidad de ingresar tus credenciales cada vez.
+#### Configuraciones locales para cada repositorio
+Además de la configuración global de Git, también puedes configurar opciones específicas para cada repositorio local. Esto es útil si deseas tener diferentes configuraciones para diferentes proyectos o si estás trabajando en un proyecto con requisitos específicos. Para configurar opciones locales para un repositorio, puedes usar el comando `git config` con la opción `--local`. Por ejemplo, para configurar un nombre de usuario específico para un repositorio, puedes ejecutar el siguiente comando dentro del directorio del repositorio:
 ```
+git config --local user.name "Nombre del Usuario"
+```
+* No te olvides hacer git clone con el host correcto, es decir, si configuraste SSH multiple, debes usar el host que corresponda a la cuenta o servicio que deseas usar para clonar el repositorio. Por ejemplo:
+
+``` 
+git clone git@github-mi-cuenta:usuario/repositorio.git
+```
+#### GIT CHECKOUT
+El comando `git checkout` se utiliza para cambiar entre ramas o para restaurar archivos en tu repositorio local. Aquí hay algunos usos comunes del comando `git checkout`:
+1. Cambiar a una rama existente:
+   ```
+   git checkout nombre-de-la-rama
+   ```
+    Esto cambiará tu directorio de trabajo a la rama especificada, permitiéndote trabajar en esa rama y realizar cambios sin afectar otras ramas.
+
+2. Crear y cambiar a una nueva rama:
+   ```   
+   git checkout -b nombre-de-la-nueva-rama
+   ```
+    Esto creará una nueva rama con el nombre especificado y cambiará tu directorio de trabajo a esa nueva rama, permitiéndote comenzar a trabajar en ella de inmediato. 
+
+3. Restaurar un archivo a su estado anterior:
+   ```
+   git checkout -- nombre-del-archivo
+   ```
+      Esto restaurará el archivo especificado a su estado anterior, descartando cualquier cambio no confirmado que hayas realizado en ese archivo. Ten cuidado al usar este comando, ya que perderás cualquier cambio no confirmado en el archivo.
+4. Cambiar a una rama remota:
+   ```
+   git checkout origin/nombre-de-la-rama-remota
+   ```
+    Esto cambiará tu directorio de trabajo a la rama remota especificada, permitiéndote trabajar con los cambios realizados en esa rama remota. Ten en cuenta que esta opción no creará una nueva rama local, sino que simplemente te permitirá trabajar con la rama remota directamente. Si deseas crear una nueva rama local basada en la rama remota, puedes usar el siguiente comando:
+   ```
+   git checkout -b nombre-de-la-nueva-rama origin/nombre-de-la-rama-remota
+   ``` 
+5. Cambiar a una rama específica en un repositorio remoto:
+   ```
+   git checkout -b nombre-de-la-nueva-rama origin/nombre-de-la-rama-remota
+   ```
+6. Cambiar a una rama específica y actualizarla con los cambios del repositorio remoto:
+   ```
+   git checkout nombre-de-la-rama
+   git pull origin nombre-de-la-rama
+   ```
+7. Cambiar a una rama específica y eliminar los cambios no confirmados:
+   ```   
+   git checkout nombre-de-la-rama
+   git reset --hard HEAD
+   ```
+8. Cambiar a una rama específica y eliminar los cambios no confirmados en un archivo específico:
+   ```
+   git checkout nombre-de-la-rama
+   git checkout -- nombre-del-archivo
+   ```
+9. Cambiar a una rama específica y eliminar los cambios no confirmados en todos los archivos:
+   ```
+   git checkout nombre-de-la-rama
+   git reset --hard HEAD
+   ```
+10. Cambiar a una rama específica y eliminar los cambios no confirmados en un directorio específico:
+    ```
+
+      git checkout nombre-de-la-rama
+      git checkout -- nombre-del-directorio/
+    ```  
+#### Buenas prácticas del checkout
+1. No trabajes mucho tiempo en 'Dectached HEAD': Evita realizar cambios significativos mientras estás en un estado de 'Detached HEAD', ya que estos cambios pueden perderse fácilmente si no se gestionan adecuadamente. Si necesitas realizar cambios, considera crear una nueva rama para preservar tu trabajo.
+2. Limpia tu directorio de trabajo antes de hacer checkout: Antes de cambiar a otra rama, asegúrate de que tu directorio de trabajo esté limpio y sin cambios no confirmados. Esto evitará conflictos y problemas al cambiar entre ramas.
+3. Usa checkout para cambiar de rama, no para crear ramas: El comando `git checkout` se utiliza principalmente para cambiar entre ramas existentes. Para crear una nueva rama, es mejor usar el comando `git branch` o `git checkout -b` para evitar confusiones y mantener un flujo de trabajo claro.
+4. No hagas checkout a ramas remotas directamente: Evita hacer checkout directamente a ramas remotas, ya que esto puede llevar a un estado de 'Detached HEAD'. En su lugar, crea una nueva rama local basada en la rama remota para trabajar de manera más segura y organizada.
+5. Usa checkout para restaurar archivos con precaución: El comando `git checkout` puede ser útil para restaurar archivos a su estado anterior, pero ten cuidado al usarlo, ya que puede resultar en la pérdida de cambios no confirmados. Asegúrate de revisar los cambios antes de usar `git checkout` para restaurar archivos y considera hacer un commit o stash de tus cambios antes de restaurar archivos si no quieres perder tu trabajo. 
