@@ -102,6 +102,76 @@ Los comandos básicos para manejar estos estados son:
 * build: Indica que se han realizado cambios relacionados con el proceso de construcción o compilación del proyecto.
 5. Añade todo el contexto necesario en el mensaje de commit: Además de ser breve, el mensaje de commit debe proporcionar suficiente contexto para que otros desarrolladores (o tú mismo en el futuro) puedan entender claramente qué cambios se realizaron y por qué. Esto puede incluir detalles sobre la razón detrás del cambio, cómo se implementó o cualquier información relevante que ayude a comprender el propósito del commit.
 
-> Razón por la cual no asistí a la clase 21/03/2026
-> - ![Hora de inicio de Parcial 18:45 pero nos dió tiempo a resolver hasta las 20:30 y de ahí a casa me demoro aproximadamente una hora y media. Por lo cual no pude asistir.](images/Foto_de_WhatsApp.png )
-> - Estaba en el parcial de la materia de Taller de Sistemas Operativos, que se llevó a cabo el mismo día y hora que la clase de Git. Lamentablemente, no pude asistir a la clase debido a este compromiso académico.
+> Razón por la cual no asistí a la clase 21/03/2026.
+>  ![](images/Foto_de_WhatsApp.png )
+> - Estaba en el parcial de la materia de Taller de Sistemas Operativos, que se llevó a cabo el mismo día.
+> Hora de inicio de Parcial 18:45 pero nos dió tiempo a resolver hasta las 20:30 y de ahí a casa me demoro aproximadamente una hora y media. por lo cual no pude asistir lamentablemente.
+
+## CLASE - 03
+### ¿Qué es GitHub?
+GitHub es una plataforma de alojamiento de código fuente y control de versiones basada en Git. Permite a los desarrolladores colaborar en proyectos de software, compartir código, gestionar versiones y realizar un seguimiento de los cambios realizados en el código fuente. GitHub ofrece una interfaz web intuitiva para gestionar repositorios, realizar pull requests, revisar código y colaborar con otros desarrolladores en proyectos de software.
+### Git vs GitHub
+| Git | GitHub |
+| --- | --- | 
+| Es un sistema de control de versiones. | Es una plataforma de alojamiento de código basada en Git. |
+| Permite gestionar el historial de versiones de un proyecto. | Permite colaborar en proyectos de software y compartir código. |
+| Es una herramienta de línea de comandos. | Ofrece una interfaz web para gestionar repositorios y colaborar con otros desarrolladores. |
+
+#### SSH vs HTTPS
+| SSH | HTTPS |
+| --- | --- |
+| Es un protocolo de comunicación seguro que utiliza claves SSH para autenticar a los usuarios. | Es un protocolo de comunicación seguro que utiliza certificados SSL para cifrar la conexión. |
+| Requiere configuración de claves SSH en el sistema. | No requiere configuración adicional, solo autenticación con usuario y contraseña. |
+| Permite una autenticación más segura y sin necesidad de ingresar credenciales cada vez. | Requiere ingresar credenciales cada vez que se realiza una operación que requiere autenticación. |
+Por lo que se recomienda usar SSH para una experiencia más fluida y segura al interactuar con repositorios en GitHub, especialmente si realizas operaciones frecuentes que requieren autenticación.
+#### Configurar GitHub con SSH
+1. Generar una clave SSH: Abre la terminal y ejecuta el siguiente comando para generar una nueva clave SSH:
+   ```
+   ssh-keygen -t ed25519 -C " "tu correo electrónico"
+   ```
+    Sigue las instrucciones para guardar la clave en el directorio predeterminado y establece una contraseña si lo deseas.
+2. Agregar la clave SSH a tu cuenta de GitHub: Copia el contenido de tu clave pública SSH (generalmente ubicada en `~/.ssh/id_ed25519.pub`) y agrégala a tu cuenta de GitHub en la sección "SSH and GPG keys" de tu configuración de perfil.
+3. Configurar Git para usar SSH: Asegúrate de que Git esté configurado para usar SSH en lugar de HTTPS. Puedes hacerlo ejecutando el siguiente comando:
+   ```
+   git config --global url."https://github.com/".insteadOf "https://github.com/"
+   ```
+    Esto redirigirá automáticamente las solicitudes de GitHub a usar SSH en lugar de HTTPS. 
+4. Probar la conexión SSH: Para verificar que la configuración SSH esté funcionando correctamente, ejecuta el siguiente comando:
+   ```  
+    ssh -T git@github.com
+    ```
+    Si la conexión es exitosa, deberías ver un mensaje de bienvenida de GitHub indicando que has autenticado correctamente con tu clave SSH. Ahora puedes usar Git para interactuar con tus repositorios en GitHub sin necesidad de ingresar tus credenciales cada vez.
+### Crear un repositorio en GitHub
+1. Inicia sesión en tu cuenta de GitHub y haz clic en el botón "New repository" para crear un nuevo repositorio.
+2. Completa los detalles del repositorio, como el nombre, la descripción y la visibilidad (público o privado). Puedes elegir si deseas inicializar el repositorio con un archivo README, un archivo .gitignore o una licencia.
+3. Haz clic en el botón "Create repository" para crear el repositorio.
+### Conectar un repositorio local de Git con uno existente en GitHub
+```
+git remote add origin <URL del repositorio en GitHub>
+git branch -M main
+git push -u origin main 
+```
+Nota: Asegúrate de reemplazar `<URL del repositorio en GitHub>` con la URL real de tu repositorio en GitHub. Este comando establece una conexión entre tu repositorio local y el repositorio remoto en GitHub, permitiéndote enviar tus cambios al repositorio remoto utilizando `git push`. Para esto también es necesario haber inicializado un repositorio local de Git con `git init` y haber realizado al menos un commit antes de ejecutar estos comandos.
+### Clonar un repositorio de Git
+Para clonar un repositorio de Git desde GitHub, puedes usar el siguiente comando en tu terminal:  
+
+```
+git clone <URL del repositorio en GitHub>
+```
+Si por accidente clonaste el repositorio usando HTTPS y deseas cambiarlo a SSH, puedes usar el siguiente comando para actualizar la URL del repositorio remoto:
+
+```git remote set-url origin <URL del repositorio en SSH>
+``` 
+Este comando también es útil si deseas cambiar la URL del repositorio remoto por cualquier motivo, como cambiar de un repositorio privado a uno público o viceversa. Asegúrate de reemplazar `<URL del repositorio en SSH>` con la URL real del repositorio en formato SSH.
+
+Para verificar que la URL del repositorio remoto se ha actualizado correctamente, puedes usar el siguiente comando:
+
+```git remote -v
+```
+### Cambios 
+* Subir mis cambios a GitHub: Para subir tus cambios locales a GitHub, puedes usar el siguiente comando:
+```git push origin <nombre de la rama>
+```
+* Bajar cambios de GitHub a tu repositorio local: Para bajar los cambios realizados en el repositorio remoto de GitHub a tu repositorio local, puedes usar el siguiente comando:
+```git pull origin <nombre de la rama>
+```
